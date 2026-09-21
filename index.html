@@ -7,7 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <style>
   :root{
     --crema:#F5F0E4;
@@ -272,30 +271,26 @@
 
 <script>
 /* =========================================================
-   CONFIGURACIÓN — José edita este arreglo (o lo reemplaza
-   por una carga desde CSV publicado de Google Sheets, mismo
-   patrón que usa index.html del catálogo).
+   CONFIGURACIÓN
+   Los creativos se leen de Supabase (misma base que el panel,
+   sección "Creativos"): fn_creativos_publicos entrega
+   producto | formato | imagen_url | codigo_x | codigo_y.
+   - formato: exactamente "reel", "youtube" o "carrusel"
+   - imagen_url: debe estar en el MISMO dominio que esta página
+     (ej. creativos.naturalezaabierta.com/imagenes/archivo.jpg)
+     para que el navegador pueda leerla y estampar el código.
+   - codigo_x / codigo_y: posición del código, decimal de 0 a 1
+     (0.5 = mitad horizontal; 0.9 = casi abajo del todo).
+   Si la carga falla, se quedan los ejemplos de demostración.
    ========================================================= */
+const SUPABASE_URL = "https://tgvcvnhrwswuxgjbpvwq.supabase.co";
+const SUPABASE_KEY = "sb_publishable_EKV8OM1y96u-DV_kUPGwkg_BZuGdf4D";
 const CONFIG = {
-  // PEGA AQUÍ el link de tu hoja "CREATIVOS" publicada como CSV
-  // (Archivo → Compartir → Publicar en la web → CSV), mismo método
-  // que ya usaste para el catálogo. Columnas esperadas, en este
-  // orden exacto (primera fila = encabezados):
-  //   producto | formato | imagen_url | codigo_x | codigo_y
-  // - formato: exactamente "reel", "youtube" o "carrusel"
-  // - imagen_url: debe estar en el MISMO dominio que esta página
-  //   (ej. creativos.naturalezaabierta.com/imagenes/archivo.jpg)
-  //   para que el navegador pueda leerla y estampar el código.
-  // - codigo_x / codigo_y: posición del código, en decimal de 0 a 1
-  //   (0.5 = mitad horizontal; 0.9 = casi abajo del todo). Si no
-  //   sabes cuál poner, dale 0.5 y 0.9 y lo ajustamos viéndolo.
-  // Mientras csvUrl esté vacío, se muestran los ejemplos de abajo.
-  csvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTHJnzksFQFHifpcAAIXdo4XL_KePxhkYKnAkVJPY5B1smJAkis0I-AwapS-dXan4NHE9bRzsV3CuhK/pub?gid=162362053&single=true&output=csv",
   telefono: "+58 422-1482602"
 };
 
 // Estos son EJEMPLOS de demostración (imágenes generadas por código,
-// no reales) — se usan SOLO si CONFIG.csvUrl está vacío arriba.
+// no reales) — se usan SOLO si Supabase no devuelve creativos válidos.
 const CREATIVOS_DEMO = [
   { id:"cc-reel-1", producto:"Choco Calma", formato:"reel", bg:"#5B6E4F", label:"CHOCO CALMA", sub:"cacao ceremonial", codigo_x:0.5, codigo_y:0.90 },
   { id:"cc-reel-2", producto:"Choco Calma", formato:"reel", bg:"#33402D", label:"CHOCO CALMA", sub:"calma real", codigo_x:0.5, codigo_y:0.90 },
@@ -516,39 +511,39 @@ document.getElementById('tabs').addEventListener('click', (e)=>{
 });
 
 /* =========================================================
-   Carga real desde Google Sheets (CSV) — mismo patrón que
-   usa el catálogo. Si CONFIG.csvUrl está vacío o falla, se
-   quedan los ejemplos de demostración.
+   Carga real desde Supabase. Si falla o no hay filas válidas,
+   se quedan los ejemplos de demostración.
    ========================================================= */
-function cargarDesdeCSV(){
-  if(!CONFIG.csvUrl) return;
-  Papa.parse(CONFIG.csvUrl, {
-    download: true,
-    header: true,
-    skipEmptyLines: true,
-    complete: (res) => {
-      const filas = res.data
-        .filter(r => r.imagen_url && r.formato)
-        .map((r, i) => ({
-          id: 'csv-' + i,
-          producto: (r.producto || 'Producto').trim(),
-          formato: (r.formato || '').trim().toLowerCase(),
-          imagen_url: (r.imagen_url || '').trim(),
-          codigo_x: parseFloat(r.codigo_x) || 0.5,
-          codigo_y: parseFloat(r.codigo_y) || 0.9,
-        }));
-      if(filas.length){
-        CREATIVOS = filas;
-        renderGrid(activeTab);
-      }
-    },
-    error: () => { /* se queda con los ejemplos de demostración */ }
-  });
+async function cargarDesdeSupabase(){
+  try{
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/fn_creativos_publicos`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY },
+      body: '{}'
+    });
+    if(!res.ok) return;
+    const data = await res.json();
+    if(!Array.isArray(data)) return;
+    const filas = data
+      .filter(r => r.imagen_url && r.formato)
+      .map(r => ({
+        id: 'db-' + r.id,
+        producto: String(r.producto || 'Producto').trim(),
+        formato: String(r.formato || '').trim().toLowerCase(),
+        imagen_url: String(r.imagen_url || '').trim(),
+        codigo_x: parseFloat(r.codigo_x) || 0.5,
+        codigo_y: parseFloat(r.codigo_y) || 0.9,
+      }));
+    if(filas.length){
+      CREATIVOS = filas;
+      renderGrid(activeTab);
+    }
+  }catch(_){ /* se queda con los ejemplos de demostración */ }
 }
 
 // Init
 setCode(currentCode);
-cargarDesdeCSV();
+cargarDesdeSupabase();
 </script>
 </body>
 </html>
