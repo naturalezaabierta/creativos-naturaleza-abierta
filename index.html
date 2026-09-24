@@ -1,1 +1,556 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Creativos para Afiliados — Naturaleza Abierta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --crema:#F5F0E4;
+    --crema-card:#FFFDF8;
+    --musgo-oscuro:#33402D;
+    --musgo:#5B6E4F;
+    --musgo-suave:#8A9A7C;
+    --ochre:#C1832E;
+    --ochre-suave:#E4B673;
+    --tinta:#2A281F;
+    --linea:#E1D8C2;
+    --sombra: 0 10px 30px -12px rgba(51,64,45,.25);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--crema);
+    color:var(--tinta);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px 80px;}
 
+  /* ---- Header ---- */
+  header.top{
+    padding:44px 24px 32px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::before{
+    content:"";
+    position:absolute; inset:0;
+    background:
+      radial-gradient(60% 80% at 15% -10%, rgba(193,131,46,.16), transparent 60%),
+      radial-gradient(50% 70% at 90% 0%, rgba(91,110,79,.18), transparent 60%);
+    pointer-events:none;
+  }
+  .eyebrow{
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    font-size:12px;
+    color:var(--musgo);
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:14px;
+  }
+  .eyebrow::before,.eyebrow::after{content:"";width:22px;height:1px;background:var(--musgo-suave);}
+  h1{
+    font-family:'Fraunces',serif;
+    font-optical-sizing:auto;
+    font-weight:600;
+    font-size:clamp(30px,5vw,48px);
+    line-height:1.05;
+    margin:0 0 14px;
+    color:var(--musgo-oscuro);
+  }
+  h1 em{font-style:italic;color:var(--ochre);}
+  .sub{
+    max-width:560px;margin:0 auto;
+    font-size:16px;line-height:1.55;color:#5A5847;
+  }
+
+  /* ---- Code bar ---- */
+  .codebar{
+    max-width:560px;margin:28px auto 0;
+    background:var(--crema-card);
+    border:1px solid var(--linea);
+    border-radius:16px;
+    box-shadow:var(--sombra);
+    padding:16px 18px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .codebar.known{background:linear-gradient(135deg, var(--musgo-oscuro), var(--musgo));}
+  .codebar.known .codebar-label,.codebar.known .code-val{color:#F5F0E4;}
+  .codebar-label{font-size:13px;color:#7A7862;}
+  .code-val{
+    font-family:'Fraunces',serif;font-weight:700;font-size:20px;
+    letter-spacing:.04em;color:var(--musgo-oscuro);
+  }
+  .codebar input{
+    border:1px solid var(--linea);
+    border-radius:10px;
+    padding:9px 12px;
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    width:150px;
+    text-transform:uppercase;
+    background:#fff;
+  }
+  .codebar button{
+    border:none;background:var(--ochre);color:#fff;
+    font-family:'Inter',sans-serif;font-weight:600;font-size:14px;
+    padding:10px 16px;border-radius:10px;cursor:pointer;
+    transition:transform .15s ease, background .15s ease;
+  }
+  .codebar button:hover{background:#A96F24;transform:translateY(-1px);}
+
+  /* ---- Tabs ---- */
+  nav.tabs{
+    display:flex;justify-content:center;gap:6px;
+    margin:40px 0 30px;
+    flex-wrap:wrap;
+  }
+  nav.tabs button{
+    font-family:'Inter',sans-serif;
+    font-weight:600;font-size:13.5px;
+    letter-spacing:.02em;
+    padding:10px 20px;
+    border-radius:999px;
+    border:1px solid var(--linea);
+    background:var(--crema-card);
+    color:var(--musgo-oscuro);
+    cursor:pointer;
+    transition:all .18s ease;
+    display:flex;align-items:center;gap:8px;
+  }
+  nav.tabs button svg{width:15px;height:15px;flex:none;}
+  nav.tabs button.active{
+    background:var(--musgo-oscuro);
+    border-color:var(--musgo-oscuro);
+    color:#F5F0E4;
+  }
+  nav.tabs button:not(.active):hover{border-color:var(--musgo-suave);}
+
+  .panel-desc{
+    text-align:center;
+    max-width:520px;margin:0 auto 30px;
+    font-size:14.5px;color:#6b6952;
+    line-height:1.5;
+  }
+  .panel-desc b{color:var(--musgo-oscuro);}
+
+  /* ---- Grids ---- */
+  .grid{display:grid;gap:22px;}
+  .grid.reel{grid-template-columns:repeat(4,1fr);}
+  .grid.youtube{grid-template-columns:repeat(2,1fr);}
+  .grid.carrusel{grid-template-columns:repeat(4,1fr);}
+  @media (max-width:900px){
+    .grid.reel{grid-template-columns:repeat(2,1fr);}
+    .grid.carrusel{grid-template-columns:repeat(2,1fr);}
+    .grid.youtube{grid-template-columns:1fr;}
+  }
+  @media (max-width:520px){
+    .grid.reel{grid-template-columns:repeat(2,1fr);}
+  }
+
+  .card{
+    background:var(--crema-card);
+    border:1px solid var(--linea);
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:var(--sombra);
+    display:flex;flex-direction:column;
+    transition:transform .2s ease;
+  }
+  .card:hover{transform:translateY(-4px);}
+  .thumb{
+    position:relative;
+    width:100%;
+    background:var(--musgo-oscuro);
+    overflow:hidden;
+  }
+  .thumb.reel,.thumb.carrusel{aspect-ratio:9/16;}
+  .thumb.youtube{aspect-ratio:16/9;}
+  .thumb canvas, .thumb img{
+    width:100%;height:100%;object-fit:cover;display:block;
+  }
+  .thumb .loading{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    color:#cfd6c6;font-size:12px;font-family:'Inter',sans-serif;
+  }
+  .card-meta{padding:12px 14px 14px;display:flex;flex-direction:column;gap:8px;}
+  .card-meta .prod{
+    font-family:'Fraunces',serif;font-weight:600;font-size:14.5px;color:var(--musgo-oscuro);
+  }
+  .dl-btn{
+    border:none;border-radius:10px;
+    background:var(--musgo-oscuro);
+    color:#F5F0E4;
+    font-family:'Inter',sans-serif;font-weight:600;font-size:13px;
+    padding:9px 10px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:6px;
+    transition:background .15s ease;
+  }
+  .dl-btn:hover{background:var(--ochre);}
+  .dl-btn svg{width:14px;height:14px;}
+
+  /* ---- Empty / instructions ---- */
+  .empty{
+    text-align:center;padding:60px 20px;color:#7a7862;
+    font-size:14.5px;
+  }
+
+  footer.help{
+    margin-top:60px;
+    background:var(--musgo-oscuro);
+    color:#EDE7D6;
+    border-radius:22px;
+    padding:30px 28px;
+    max-width:1180px;
+    margin-left:auto;margin-right:auto;
+  }
+  footer.help h3{
+    font-family:'Fraunces',serif;font-weight:600;font-size:19px;margin:0 0 10px;color:#F5F0E4;
+  }
+  footer.help p{font-size:13.5px;line-height:1.6;color:#C9CDBB;margin:0 0 6px;}
+  footer.help code{background:rgba(255,255,255,.08);padding:1px 6px;border-radius:5px;font-size:12.5px;}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="eyebrow">Naturaleza Abierta · Espiral Ancestral</div>
+  <h1>Comparte con tu <em>toque</em>, no en blanco</h1>
+  <p class="sub">Descarga cualquier imagen ya lista con tu código de afiliado impreso. Solo tienes que subirla a tu estado o tus redes.</p>
+
+  <div class="codebar" id="codebar">
+    <span class="codebar-label" id="codebarLabel">Aún no detectamos tu código</span>
+    <input type="text" id="codeInput" placeholder="Ej: NA-4821" maxlength="14">
+    <button id="codeBtn">Usar este código</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="tabs" id="tabs">
+    <button data-tab="reel" class="active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="3"/><circle cx="12" cy="18" r="1"/></svg>
+      Formato Reel / Estado
+    </button>
+    <button data-tab="youtube">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M10 9l5 3-5 3z" fill="currentColor" stroke="none"/></svg>
+      Formato YouTube
+    </button>
+    <button data-tab="carrusel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      Formato Carrusel
+    </button>
+  </nav>
+
+  <p class="panel-desc" id="panelDesc"></p>
+
+  <section class="grid reel" id="grid"></section>
+  <div class="empty" id="emptyMsg" style="display:none;"></div>
+</div>
+
+<div class="wrap">
+  <footer class="help">
+    <h3>Para José — cómo cargar creativos reales</h3>
+    <p>Cada imagen se define en el arreglo <code>CREATIVOS</code> dentro del código de esta página (o, más adelante, en una fila de una hoja publicada como CSV, igual que el catálogo).</p>
+    <p>Cada entrada necesita: <code>imagen_url</code> (debe estar en un hosting que permita CORS — GitHub Pages funciona bien; los links directos de Google Drive normalmente NO funcionan para esto), <code>formato</code> (reel / youtube / carrusel), <code>producto</code>, y las coordenadas <code>codigo_x</code> / <code>codigo_y</code> en píxeles de la imagen original donde debe imprimirse el código.</p>
+    <p>Las coordenadas dependen de dónde dejaste el espacio en blanco en cada diseño — si me compartes cada imagen te calculo yo mismo esas coordenadas exactas.</p>
+  </footer>
+</div>
+
+<script>
+/* =========================================================
+   CONFIGURACIÓN
+   Los creativos se leen de Supabase (misma base que el panel,
+   sección "Creativos"): fn_creativos_publicos entrega
+   producto | formato | imagen_url | codigo_x | codigo_y.
+   - formato: exactamente "reel", "youtube" o "carrusel"
+   - imagen_url: debe estar en el MISMO dominio que esta página
+     (ej. creativos.naturalezaabierta.com/imagenes/archivo.jpg)
+     para que el navegador pueda leerla y estampar el código.
+   - codigo_x / codigo_y: posición del código, decimal de 0 a 1
+     (0.5 = mitad horizontal; 0.9 = casi abajo del todo).
+   Si la carga falla, se quedan los ejemplos de demostración.
+   ========================================================= */
+const SUPABASE_URL = "https://tgvcvnhrwswuxgjbpvwq.supabase.co";
+const SUPABASE_KEY = "sb_publishable_EKV8OM1y96u-DV_kUPGwkg_BZuGdf4D";
+const CONFIG = {
+  telefono: "+58 422-1482602"
+};
+
+// Estos son EJEMPLOS de demostración (imágenes generadas por código,
+// no reales) — se usan SOLO si Supabase no devuelve creativos válidos.
+const CREATIVOS_DEMO = [
+  { id:"cc-reel-1", producto:"Choco Calma", formato:"reel", bg:"#5B6E4F", label:"CHOCO CALMA", sub:"cacao ceremonial", codigo_x:0.5, codigo_y:0.90 },
+  { id:"cc-reel-2", producto:"Choco Calma", formato:"reel", bg:"#33402D", label:"CHOCO CALMA", sub:"calma real", codigo_x:0.5, codigo_y:0.90 },
+  { id:"aq-reel-1", producto:"AQuetzalí", formato:"reel", bg:"#C1832E", label:"AQUETZALÍ", sub:"gotas botánicas", codigo_x:0.5, codigo_y:0.90 },
+  { id:"mm-reel-1", producto:"Maná Multimineral", formato:"reel", bg:"#8A9A7C", label:"MANÁ MULTIMINERAL", sub:"suplemento diario", codigo_x:0.5, codigo_y:0.90 },
+  { id:"cc-yt-1", producto:"Choco Calma", formato:"youtube", bg:"#33402D", label:"CHOCO CALMA", sub:"cacao ceremonial · Naturaleza Abierta", codigo_x:0.5, codigo_y:0.86 },
+  { id:"aq-yt-1", producto:"AQuetzalí", formato:"youtube", bg:"#5B6E4F", label:"AQUETZALÍ", sub:"gotas botánicas · Naturaleza Abierta", codigo_x:0.5, codigo_y:0.86 },
+  { id:"cc-car-1", producto:"Choco Calma", formato:"carrusel", bg:"#C1832E", label:"CHOCO CALMA", sub:"1/4", codigo_x:0.5, codigo_y:0.90 },
+  { id:"cc-car-2", producto:"Choco Calma", formato:"carrusel", bg:"#8A9A7C", label:"CHOCO CALMA", sub:"2/4", codigo_x:0.5, codigo_y:0.90 },
+  { id:"cc-car-3", producto:"Choco Calma", formato:"carrusel", bg:"#33402D", label:"CHOCO CALMA", sub:"3/4", codigo_x:0.5, codigo_y:0.90 },
+  { id:"cc-car-4", producto:"Choco Calma", formato:"carrusel", bg:"#5B6E4F", label:"CHOCO CALMA", sub:"4/4", codigo_x:0.5, codigo_y:0.90 },
+];
+
+/* =========================================================
+   Lógica de código de afiliado (?ref=)
+   ========================================================= */
+function getRefFromUrl(){
+  const p = new URLSearchParams(window.location.search);
+  return (p.get('ref') || '').toUpperCase().trim();
+}
+
+let currentCode = getRefFromUrl();
+
+function setCode(code){
+  currentCode = (code || '').toUpperCase().trim();
+  const bar = document.getElementById('codebar');
+  const label = document.getElementById('codebarLabel');
+  if(currentCode){
+    bar.classList.add('known');
+    label.innerHTML = 'Tu código: <span class="code-val">' + currentCode + '</span>';
+    document.getElementById('codeInput').style.display='none';
+    document.getElementById('codeBtn').textContent='Cambiar';
+  } else {
+    bar.classList.remove('known');
+    label.textContent = 'Aún no detectamos tu código';
+    document.getElementById('codeInput').style.display='inline-block';
+    document.getElementById('codeBtn').textContent='Usar este código';
+  }
+  renderGrid(activeTab);
+}
+
+document.getElementById('codeBtn').addEventListener('click', ()=>{
+  if(currentCode){ setCode(''); return; }
+  const val = document.getElementById('codeInput').value;
+  if(val) setCode(val);
+});
+
+/* =========================================================
+   Generación de imagen base de demostración (sin imagen real)
+   — esto se reemplaza por drawImage() de una imagen real cuando
+   José cargue sus creativos de verdad. Ver dibujarCreativoReal().
+   ========================================================= */
+function dibujarPlaceholder(ctx, w, h, item){
+  const grad = ctx.createLinearGradient(0,0,w,h);
+  grad.addColorStop(0, item.bg);
+  grad.addColorStop(1, '#2A281F');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0,0,w,h);
+
+  // marco sutil
+  ctx.strokeStyle = 'rgba(245,240,228,.25)';
+  ctx.lineWidth = Math.max(2, w*0.004);
+  ctx.strokeRect(w*0.04,h*0.04,w*0.92,h*0.92);
+
+  // teléfono de Valentina arriba
+  ctx.fillStyle = '#F5F0E4';
+  ctx.textAlign = 'center';
+  ctx.font = `600 ${Math.round(w*0.032)}px Inter, sans-serif`;
+  ctx.fillText('NATURALEZA ABIERTA', w/2, h*0.12);
+  ctx.font = `400 ${Math.round(w*0.026)}px Inter, sans-serif`;
+  ctx.fillStyle = 'rgba(245,240,228,.75)';
+  ctx.fillText(CONFIG.telefono, w/2, h*0.16);
+
+  // producto
+  ctx.fillStyle = '#F5F0E4';
+  ctx.font = `700 ${Math.round(w*0.08)}px Fraunces, serif`;
+  ctx.fillText(item.label, w/2, h*0.5);
+  ctx.font = `400 ${Math.round(w*0.032)}px Inter, sans-serif`;
+  ctx.fillStyle = 'rgba(245,240,228,.8)';
+  ctx.fillText(item.sub, w/2, h*0.56);
+
+  ctx.font = `500 ${Math.round(w*0.024)}px Inter, sans-serif`;
+  ctx.fillStyle = 'rgba(245,240,228,.55)';
+  ctx.fillText('Pídelo aquí con mi código 👇', w/2, item.codigo_y*h - w*0.05);
+}
+
+// Cuando José tenga imágenes reales, esta es la función que se usa:
+function dibujarCreativoReal(ctx, img, w, h, item){
+  ctx.drawImage(img, 0, 0, w, h);
+  // el código se dibuja después, en dibujarCodigo()
+}
+
+// Dibuja una imagen real ajustada tipo "cover" (llena el lienzo sin deformarse)
+function dibujarImagenCover(ctx, img, w, h){
+  const escala = Math.max(w / img.width, h / img.height);
+  const dw = img.width * escala, dh = img.height * escala;
+  const dx = (w - dw) / 2, dy = (h - dh) / 2;
+  ctx.drawImage(img, dx, dy, dw, dh);
+}
+
+function dibujarCodigo(ctx, w, h, item, code){
+  const texto = code || 'TU-CÓDIGO';
+  const x = item.codigo_x * w;
+  const y = item.codigo_y * h;
+  ctx.textAlign = 'center';
+  ctx.font = `700 ${Math.round(w*0.075)}px Fraunces, serif`;
+  // halo para legibilidad sobre cualquier fondo
+  ctx.lineWidth = w*0.012;
+  ctx.strokeStyle = 'rgba(42,40,31,.55)';
+  ctx.strokeText(texto, x, y);
+  ctx.fillStyle = '#F5F0E4';
+  ctx.fillText(texto, x, y);
+}
+
+/* =========================================================
+   Render de la cuadrícula
+   ========================================================= */
+const DIMENSIONES = {
+  reel:     { w: 1080, h: 1920 },
+  youtube:  { w: 1280, h: 720 },
+  carrusel: { w: 1080, h: 1350 },
+};
+
+const DESCRIPCIONES = {
+  reel: 'Formato vertical, ideal para <b>estados de WhatsApp, Reels e Historias</b>.',
+  youtube: 'Formato horizontal, listo para usar como <b>miniatura o portada de video</b>.',
+  carrusel: 'Formato cuadrado, pensado para <b>publicaciones en carrusel</b> en tus redes.',
+};
+
+let activeTab = 'reel';
+let CREATIVOS = CREATIVOS_DEMO;
+
+function renderGrid(tab){
+  activeTab = tab;
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('emptyMsg');
+  grid.className = 'grid ' + tab;
+  document.getElementById('panelDesc').innerHTML = DESCRIPCIONES[tab];
+
+  const items = CREATIVOS.filter(c => c.formato === tab);
+  grid.innerHTML = '';
+
+  if(items.length === 0){
+    empty.style.display = 'block';
+    empty.textContent = 'Todavía no hay creativos en este formato.';
+    return;
+  }
+  empty.style.display = 'none';
+
+  items.forEach(item => {
+    const dim = DIMENSIONES[item.formato];
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    const thumbClass = item.formato === 'youtube' ? 'youtube' : (item.formato === 'carrusel' ? 'carrusel' : 'reel');
+    card.innerHTML = `
+      <div class="thumb ${thumbClass}">
+        <canvas width="${dim.w}" height="${dim.h}" data-id="${item.id}"></canvas>
+      </div>
+      <div class="card-meta">
+        <div class="prod">${item.producto}</div>
+        <button class="dl-btn" data-id="${item.id}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>
+          Descargar
+        </button>
+      </div>
+    `;
+    grid.appendChild(card);
+
+    const canvas = card.querySelector('canvas');
+    const ctx = canvas.getContext('2d');
+
+    if(item.imagen_url){
+      // Imagen real (viene del CSV): la carga, la ajusta y estampa el código
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        dibujarImagenCover(ctx, img, dim.w, dim.h);
+        dibujarCodigo(ctx, dim.w, dim.h, item, currentCode);
+      };
+      img.onerror = () => {
+        dibujarPlaceholder(ctx, dim.w, dim.h, {...item, label:item.producto.toUpperCase(), sub:'⚠ no se pudo cargar la imagen', bg:'#8A5A3E'});
+        dibujarCodigo(ctx, dim.w, dim.h, item, currentCode);
+      };
+      img.src = item.imagen_url;
+    } else {
+      // Ejemplo de demostración generado por código
+      dibujarPlaceholder(ctx, dim.w, dim.h, item);
+      dibujarCodigo(ctx, dim.w, dim.h, item, currentCode);
+    }
+  });
+
+  grid.querySelectorAll('.dl-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const id = btn.dataset.id;
+      const canvas = grid.querySelector(`canvas[data-id="${id}"]`);
+      const item = CREATIVOS.find(c=>c.id===id);
+      canvas.toBlob(blob=>{
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${item.producto.replace(/\s+/g,'-')}-${item.formato}-${currentCode || 'naturaleza-abierta'}.png`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }, 'image/png');
+    });
+  });
+}
+
+document.getElementById('tabs').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button[data-tab]');
+  if(!btn) return;
+  document.querySelectorAll('#tabs button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGrid(btn.dataset.tab);
+});
+
+/* =========================================================
+   Carga real desde Supabase. Si falla o no hay filas válidas,
+   se quedan los ejemplos de demostración.
+   ========================================================= */
+async function cargarDesdeSupabase(){
+  try{
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/fn_creativos_publicos`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+         },
+      body: '{}'
+    });
+    if(!res.ok){
+      console.error('fn_creativos_publicos: respuesta no OK', res.status, await res.text().catch(()=>'' ));
+      return;
+    }
+    const data = await res.json();
+    if(!Array.isArray(data)) return;
+    const filas = data
+      .filter(r => r.imagen_url && r.formato)
+      .map(r => ({
+        id: 'db-' + r.id,
+        producto: String(r.producto || 'Producto').trim(),
+        formato: String(r.formato || '').trim().toLowerCase(),
+        imagen_url: String(r.imagen_url || '').trim(),
+        codigo_x: parseFloat(r.codigo_x) || 0.5,
+        codigo_y: parseFloat(r.codigo_y) || 0.9,
+      }));
+    if(filas.length){
+      CREATIVOS = filas;
+      renderGrid(activeTab);
+    }
+  }catch(err){ console.error('fn_creativos_publicos: error de red', err); /* se queda con los ejemplos de demostración */ }
+}
+
+// Init
+setCode(currentCode);
+cargarDesdeSupabase();
+</script>
+</body>
+</html>
