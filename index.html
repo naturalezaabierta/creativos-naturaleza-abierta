@@ -86,6 +86,7 @@
     gap:12px;
     flex-wrap:wrap;
     justify-content:center;
+    position:relative;
   }
   .codebar.known{background:linear-gradient(135deg, var(--musgo-oscuro), var(--musgo));}
   .codebar.known .codebar-label,.codebar.known .code-val{color:#F5F0E4;}
@@ -147,7 +148,7 @@
   }
   .panel-desc b{color:var(--musgo-oscuro);}
 
-  /* ---- Grids ---- */
+  /* ---- Grids (escritorio) ---- */
   .grid{display:grid;gap:22px;}
   .grid.reel{grid-template-columns:repeat(4,1fr);}
   .grid.youtube{grid-template-columns:repeat(2,1fr);}
@@ -156,9 +157,6 @@
     .grid.reel{grid-template-columns:repeat(2,1fr);}
     .grid.carrusel{grid-template-columns:repeat(2,1fr);}
     .grid.youtube{grid-template-columns:1fr;}
-  }
-  @media (max-width:520px){
-    .grid.reel{grid-template-columns:repeat(2,1fr);}
   }
 
   .card{
@@ -177,14 +175,11 @@
     background:var(--musgo-oscuro);
     overflow:hidden;
   }
-  .thumb.reel,.thumb.carrusel{aspect-ratio:9/16;}
+  .thumb.reel{aspect-ratio:9/16;}
+  .thumb.carrusel{aspect-ratio:4/5;}
   .thumb.youtube{aspect-ratio:16/9;}
   .thumb canvas, .thumb img{
     width:100%;height:100%;object-fit:cover;display:block;
-  }
-  .thumb .loading{
-    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-    color:#cfd6c6;font-size:12px;font-family:'Inter',sans-serif;
   }
   .card-meta{padding:12px 14px 14px;display:flex;flex-direction:column;gap:8px;}
   .card-meta .prod{
@@ -195,21 +190,86 @@
     background:var(--musgo-oscuro);
     color:#F5F0E4;
     font-family:'Inter',sans-serif;font-weight:600;font-size:13px;
-    padding:9px 10px;cursor:pointer;
+    padding:11px 10px;cursor:pointer;
     display:flex;align-items:center;justify-content:center;gap:6px;
     transition:background .15s ease;
   }
   .dl-btn:hover{background:var(--ochre);}
   .dl-btn svg{width:14px;height:14px;}
 
-  /* ---- Empty / instructions ---- */
+  /* ---- Barra de deslizar (solo celular) ---- */
+  .swipe-bar{display:none;}
+
+  /* ---- Celular: carrusel horizontal con imágenes grandes ---- */
+  @media (max-width:700px){
+    .wrap{padding:0 16px 60px;}
+    header.top{padding:34px 16px 24px;}
+    nav.tabs{margin:28px 0 20px;}
+    nav.tabs button{padding:9px 14px;font-size:12.5px;}
+
+    .grid{
+      display:flex;
+      gap:14px;
+      overflow-x:auto;
+      scroll-snap-type:x mandatory;
+      -webkit-overflow-scrolling:touch;
+      margin:0 -16px;
+      padding:4px 16px 14px;
+      scrollbar-width:none;
+    }
+    .grid::-webkit-scrollbar{display:none;}
+    .grid .card{flex:none;scroll-snap-align:center;}
+    .card:hover{transform:none;}
+
+    /* Reel: una imagen grande por pantalla */
+    .grid.reel .card{width:78%;}
+    /* Carrusel: una imagen grande por pantalla */
+    .grid.carrusel .card{width:84%;}
+    /* YouTube: dos imágenes una arriba de otra; al deslizar pasan las dos */
+    .grid.youtube{
+      display:grid;
+      grid-auto-flow:column;
+      grid-template-rows:auto auto;
+      grid-auto-columns:92%;
+      gap:14px;
+    }
+    .grid.youtube .card{width:auto;scroll-snap-align:start;}
+
+    .swipe-bar{
+      display:flex;align-items:center;justify-content:center;gap:12px;
+      margin:4px 0 0;
+    }
+    .swipe-bar[hidden]{display:none;}
+    .swipe-bar button{
+      width:42px;height:42px;border-radius:50%;
+      border:1px solid var(--linea);
+      background:var(--crema-card);
+      color:var(--musgo-oscuro);
+      font-size:20px;line-height:1;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .swipe-bar .count{
+      font-weight:600;font-size:13px;color:var(--musgo-oscuro);
+      min-width:56px;text-align:center;
+    }
+    .swipe-hint{
+      text-align:center;font-size:13px;color:#6b6952;
+      margin:10px 0 0;line-height:1.45;
+    }
+    .swipe-hint[hidden]{display:none;}
+  }
+  .swipe-hint{display:none;}
+  @media (max-width:700px){ .swipe-hint{display:block;} .swipe-hint[hidden]{display:none;} }
+
+  /* ---- Vacío ---- */
   .empty{
     text-align:center;padding:60px 20px;color:#7a7862;
     font-size:14.5px;
   }
 
+  /* ---- Cómo usar ---- */
   footer.help{
-    margin-top:60px;
+    margin-top:50px;
     background:var(--musgo-oscuro);
     color:#EDE7D6;
     border-radius:22px;
@@ -218,10 +278,15 @@
     margin-left:auto;margin-right:auto;
   }
   footer.help h3{
-    font-family:'Fraunces',serif;font-weight:600;font-size:19px;margin:0 0 10px;color:#F5F0E4;
+    font-family:'Fraunces',serif;font-weight:600;font-size:20px;margin:0 0 12px;color:#F5F0E4;
   }
-  footer.help p{font-size:13.5px;line-height:1.6;color:#C9CDBB;margin:0 0 6px;}
-  footer.help code{background:rgba(255,255,255,.08);padding:1px 6px;border-radius:5px;font-size:12.5px;}
+  footer.help p{font-size:14.5px;line-height:1.65;color:#DAD9C8;margin:0 0 10px;}
+  footer.help ol{margin:0 0 12px;padding-left:20px;font-size:14.5px;line-height:1.65;color:#DAD9C8;}
+  footer.help li{margin-bottom:6px;}
+  footer.help b{color:#F5F0E4;}
+  footer.help .code-inline{
+    font-family:'Fraunces',serif;font-weight:700;letter-spacing:.04em;color:var(--ochre-suave);
+  }
 </style>
 </head>
 <body>
@@ -242,30 +307,41 @@
   <nav class="tabs" id="tabs">
     <button data-tab="reel" class="active">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="3"/><circle cx="12" cy="18" r="1"/></svg>
-      Formato Reel / Estado
+      Reel / Estado
     </button>
     <button data-tab="youtube">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M10 9l5 3-5 3z" fill="currentColor" stroke="none"/></svg>
-      Formato YouTube
+      YouTube
     </button>
     <button data-tab="carrusel">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-      Formato Carrusel
+      Carrusel
     </button>
   </nav>
 
   <p class="panel-desc" id="panelDesc"></p>
 
   <section class="grid reel" id="grid"></section>
+
+  <div class="swipe-bar" id="swipeBar" hidden>
+    <button type="button" id="prevBtn" aria-label="Anterior">‹</button>
+    <span class="count" id="swipeCount">1 de 1</span>
+    <button type="button" id="nextBtn" aria-label="Siguiente">›</button>
+  </div>
+  <p class="swipe-hint" id="swipeHint" hidden>👆 Desliza con el dedo hacia los lados (o usa las flechas) para ver más creativos de esta sección.</p>
+
   <div class="empty" id="emptyMsg" style="display:none;"></div>
 </div>
 
 <div class="wrap">
   <footer class="help">
-    <h3>Para José — cómo cargar creativos reales</h3>
-    <p>Cada imagen se define en el arreglo <code>CREATIVOS</code> dentro del código de esta página (o, más adelante, en una fila de una hoja publicada como CSV, igual que el catálogo).</p>
-    <p>Cada entrada necesita: <code>imagen_url</code> (debe estar en un hosting que permita CORS — GitHub Pages funciona bien; los links directos de Google Drive normalmente NO funcionan para esto), <code>formato</code> (reel / youtube / carrusel), <code>producto</code>, y las coordenadas <code>codigo_x</code> / <code>codigo_y</code> en píxeles de la imagen original donde debe imprimirse el código.</p>
-    <p>Las coordenadas dependen de dónde dejaste el espacio en blanco en cada diseño — si me compartes cada imagen te calculo yo mismo esas coordenadas exactas.</p>
+    <h3>Cómo usar tus creativos</h3>
+    <ol>
+      <li><b>Descarga</b> la imagen que más te guste: ya trae tu código <span class="code-inline" id="footCode">de afiliado</span> impreso.</li>
+      <li><b>Súbela</b> a tu estado de WhatsApp, Instagram, TikTok, Facebook o la red que uses.</li>
+      <li>Cuando alguien nos escriba por esa imagen y diga tu código, <b>esa compra te genera comisiones</b>.</li>
+    </ol>
+    <p>Mientras más compartas tu imagen con tu código, más personas llegan a Naturaleza Abierta por ti 🌿</p>
   </footer>
 </div>
 
@@ -278,10 +354,8 @@
    - formato: exactamente "reel", "youtube" o "carrusel"
    - imagen_url: debe estar en el MISMO dominio que esta página
      (ej. creativos.naturalezaabierta.com/imagenes/archivo.jpg)
-     para que el navegador pueda leerla y estampar el código.
+     y el archivo debe existir en la carpeta "imagenes" del repo.
    - codigo_x / codigo_y: posición del código, decimal de 0 a 1
-     (0.5 = mitad horizontal; 0.9 = casi abajo del todo).
-   Si la carga falla, se quedan los ejemplos de demostración.
    ========================================================= */
 const SUPABASE_URL = "https://tgvcvnhrwswuxgjbpvwq.supabase.co";
 const SUPABASE_KEY = "sb_publishable_EKV8OM1y96u-DV_kUPGwkg_BZuGdf4D";
@@ -289,8 +363,7 @@ const CONFIG = {
   telefono: "+58 422-1482602"
 };
 
-// Estos son EJEMPLOS de demostración (imágenes generadas por código,
-// no reales) — se usan SOLO si Supabase no devuelve creativos válidos.
+// EJEMPLOS de demostración: se usan SOLO si Supabase no devuelve creativos válidos.
 const CREATIVOS_DEMO = [
   { id:"cc-reel-1", producto:"Choco Calma", formato:"reel", bg:"#5B6E4F", label:"CHOCO CALMA", sub:"cacao ceremonial", codigo_x:0.5, codigo_y:0.90 },
   { id:"cc-reel-2", producto:"Choco Calma", formato:"reel", bg:"#33402D", label:"CHOCO CALMA", sub:"calma real", codigo_x:0.5, codigo_y:0.90 },
@@ -305,7 +378,7 @@ const CREATIVOS_DEMO = [
 ];
 
 /* =========================================================
-   Lógica de código de afiliado (?ref=)
+   Código de afiliado (?ref=)
    ========================================================= */
 function getRefFromUrl(){
   const p = new URLSearchParams(window.location.search);
@@ -318,16 +391,19 @@ function setCode(code){
   currentCode = (code || '').toUpperCase().trim();
   const bar = document.getElementById('codebar');
   const label = document.getElementById('codebarLabel');
+  const foot = document.getElementById('footCode');
   if(currentCode){
     bar.classList.add('known');
     label.innerHTML = 'Tu código: <span class="code-val">' + currentCode + '</span>';
     document.getElementById('codeInput').style.display='none';
     document.getElementById('codeBtn').textContent='Cambiar';
+    foot.textContent = currentCode;
   } else {
     bar.classList.remove('known');
     label.textContent = 'Aún no detectamos tu código';
     document.getElementById('codeInput').style.display='inline-block';
     document.getElementById('codeBtn').textContent='Usar este código';
+    foot.textContent = 'de afiliado';
   }
   renderGrid(activeTab);
 }
@@ -339,9 +415,7 @@ document.getElementById('codeBtn').addEventListener('click', ()=>{
 });
 
 /* =========================================================
-   Generación de imagen base de demostración (sin imagen real)
-   — esto se reemplaza por drawImage() de una imagen real cuando
-   José cargue sus creativos de verdad. Ver dibujarCreativoReal().
+   Dibujo en canvas
    ========================================================= */
 function dibujarPlaceholder(ctx, w, h, item){
   const grad = ctx.createLinearGradient(0,0,w,h);
@@ -350,12 +424,10 @@ function dibujarPlaceholder(ctx, w, h, item){
   ctx.fillStyle = grad;
   ctx.fillRect(0,0,w,h);
 
-  // marco sutil
   ctx.strokeStyle = 'rgba(245,240,228,.25)';
   ctx.lineWidth = Math.max(2, w*0.004);
   ctx.strokeRect(w*0.04,h*0.04,w*0.92,h*0.92);
 
-  // teléfono de Valentina arriba
   ctx.fillStyle = '#F5F0E4';
   ctx.textAlign = 'center';
   ctx.font = `600 ${Math.round(w*0.032)}px Inter, sans-serif`;
@@ -364,7 +436,6 @@ function dibujarPlaceholder(ctx, w, h, item){
   ctx.fillStyle = 'rgba(245,240,228,.75)';
   ctx.fillText(CONFIG.telefono, w/2, h*0.16);
 
-  // producto
   ctx.fillStyle = '#F5F0E4';
   ctx.font = `700 ${Math.round(w*0.08)}px Fraunces, serif`;
   ctx.fillText(item.label, w/2, h*0.5);
@@ -377,13 +448,7 @@ function dibujarPlaceholder(ctx, w, h, item){
   ctx.fillText('Pídelo aquí con mi código 👇', w/2, item.codigo_y*h - w*0.05);
 }
 
-// Cuando José tenga imágenes reales, esta es la función que se usa:
-function dibujarCreativoReal(ctx, img, w, h, item){
-  ctx.drawImage(img, 0, 0, w, h);
-  // el código se dibuja después, en dibujarCodigo()
-}
-
-// Dibuja una imagen real ajustada tipo "cover" (llena el lienzo sin deformarse)
+// Imagen real ajustada tipo "cover" (llena el lienzo sin deformarse)
 function dibujarImagenCover(ctx, img, w, h){
   const escala = Math.max(w / img.width, h / img.height);
   const dw = img.width * escala, dh = img.height * escala;
@@ -397,7 +462,6 @@ function dibujarCodigo(ctx, w, h, item, code){
   const y = item.codigo_y * h;
   ctx.textAlign = 'center';
   ctx.font = `700 ${Math.round(w*0.075)}px Fraunces, serif`;
-  // halo para legibilidad sobre cualquier fondo
   ctx.lineWidth = w*0.012;
   ctx.strokeStyle = 'rgba(42,40,31,.55)';
   ctx.strokeText(texto, x, y);
@@ -406,7 +470,7 @@ function dibujarCodigo(ctx, w, h, item, code){
 }
 
 /* =========================================================
-   Render de la cuadrícula
+   Render
    ========================================================= */
 const DIMENSIONES = {
   reel:     { w: 1080, h: 1920 },
@@ -417,37 +481,85 @@ const DIMENSIONES = {
 const DESCRIPCIONES = {
   reel: 'Formato vertical, ideal para <b>estados de WhatsApp, Reels e Historias</b>.',
   youtube: 'Formato horizontal, listo para usar como <b>miniatura o portada de video</b>.',
-  carrusel: 'Formato cuadrado, pensado para <b>publicaciones en carrusel</b> en tus redes.',
+  carrusel: 'Formato vertical 4:5, pensado para <b>publicaciones en carrusel</b> en tus redes.',
 };
 
 let activeTab = 'reel';
 let CREATIVOS = CREATIVOS_DEMO;
 
+const gridEl = document.getElementById('grid');
+const swipeBar = document.getElementById('swipeBar');
+const swipeHint = document.getElementById('swipeHint');
+const swipeCount = document.getElementById('swipeCount');
+const emptyEl = document.getElementById('emptyMsg');
+
+function pasoDeslizar(){
+  const first = gridEl.querySelector('.card:not([hidden])');
+  if(!first) return 0;
+  return first.offsetWidth + 14;
+}
+
+function totalPaginas(){
+  const n = gridEl.querySelectorAll('.card:not([hidden])').length;
+  const celular = window.matchMedia('(max-width:700px)').matches;
+  // En celular, YouTube muestra 2 imágenes apiladas por "página"
+  return (activeTab === 'youtube' && celular) ? Math.ceil(n/2) : n;
+}
+
+function actualizarContador(){
+  const total = totalPaginas();
+  const paso = pasoDeslizar() || 1;
+  let idx = Math.round(gridEl.scrollLeft / paso) + 1;
+  if(idx < 1) idx = 1;
+  if(idx > total) idx = total;
+  swipeCount.textContent = idx + ' de ' + total;
+}
+
+function actualizarBarra(){
+  const total = totalPaginas();
+  const mostrar = total > 1;
+  swipeBar.hidden = !mostrar;
+  swipeHint.hidden = !mostrar;
+  if(mostrar) actualizarContador();
+}
+
+function revisarVacio(){
+  const total = gridEl.querySelectorAll('.card:not([hidden])').length;
+  if(total === 0){
+    emptyEl.style.display = 'block';
+    emptyEl.textContent = 'Todavía no hay creativos en este formato. Pronto agregaremos más 🌿';
+  } else {
+    emptyEl.style.display = 'none';
+  }
+  actualizarBarra();
+}
+
+gridEl.addEventListener('scroll', actualizarContador, {passive:true});
+document.getElementById('prevBtn').addEventListener('click', ()=> gridEl.scrollBy({left:-pasoDeslizar(), behavior:'smooth'}));
+document.getElementById('nextBtn').addEventListener('click', ()=> gridEl.scrollBy({left: pasoDeslizar(), behavior:'smooth'}));
+window.addEventListener('resize', actualizarBarra);
+
 function renderGrid(tab){
   activeTab = tab;
-  const grid = document.getElementById('grid');
-  const empty = document.getElementById('emptyMsg');
-  grid.className = 'grid ' + tab;
+  gridEl.className = 'grid ' + tab;
+  gridEl.scrollLeft = 0;
   document.getElementById('panelDesc').innerHTML = DESCRIPCIONES[tab];
 
   const items = CREATIVOS.filter(c => c.formato === tab);
-  grid.innerHTML = '';
+  gridEl.innerHTML = '';
 
   if(items.length === 0){
-    empty.style.display = 'block';
-    empty.textContent = 'Todavía no hay creativos en este formato.';
+    revisarVacio();
     return;
   }
-  empty.style.display = 'none';
+  emptyEl.style.display = 'none';
 
   items.forEach(item => {
     const dim = DIMENSIONES[item.formato];
     const card = document.createElement('div');
     card.className = 'card';
-
-    const thumbClass = item.formato === 'youtube' ? 'youtube' : (item.formato === 'carrusel' ? 'carrusel' : 'reel');
     card.innerHTML = `
-      <div class="thumb ${thumbClass}">
+      <div class="thumb ${item.formato}">
         <canvas width="${dim.w}" height="${dim.h}" data-id="${item.id}"></canvas>
       </div>
       <div class="card-meta">
@@ -458,13 +570,12 @@ function renderGrid(tab){
         </button>
       </div>
     `;
-    grid.appendChild(card);
+    gridEl.appendChild(card);
 
     const canvas = card.querySelector('canvas');
     const ctx = canvas.getContext('2d');
 
     if(item.imagen_url){
-      // Imagen real (viene del CSV): la carga, la ajusta y estampa el código
       const img = new Image();
       img.crossOrigin = 'anonymous';
       img.onload = () => {
@@ -472,21 +583,23 @@ function renderGrid(tab){
         dibujarCodigo(ctx, dim.w, dim.h, item, currentCode);
       };
       img.onerror = () => {
-        dibujarPlaceholder(ctx, dim.w, dim.h, {...item, label:item.producto.toUpperCase(), sub:'⚠ no se pudo cargar la imagen', bg:'#8A5A3E'});
-        dibujarCodigo(ctx, dim.w, dim.h, item, currentCode);
+        // Imagen que no existe o no carga: se oculta para no mostrar tarjetas rotas
+        console.warn('No se pudo cargar la imagen:', item.imagen_url);
+        card.hidden = true;
+        card.style.display = 'none';
+        revisarVacio();
       };
       img.src = item.imagen_url;
     } else {
-      // Ejemplo de demostración generado por código
       dibujarPlaceholder(ctx, dim.w, dim.h, item);
       dibujarCodigo(ctx, dim.w, dim.h, item, currentCode);
     }
   });
 
-  grid.querySelectorAll('.dl-btn').forEach(btn=>{
+  gridEl.querySelectorAll('.dl-btn').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       const id = btn.dataset.id;
-      const canvas = grid.querySelector(`canvas[data-id="${id}"]`);
+      const canvas = gridEl.querySelector(`canvas[data-id="${id}"]`);
       const item = CREATIVOS.find(c=>c.id===id);
       canvas.toBlob(blob=>{
         const url = URL.createObjectURL(blob);
@@ -500,6 +613,8 @@ function renderGrid(tab){
       }, 'image/png');
     });
   });
+
+  actualizarBarra();
 }
 
 document.getElementById('tabs').addEventListener('click', (e)=>{
@@ -511,8 +626,7 @@ document.getElementById('tabs').addEventListener('click', (e)=>{
 });
 
 /* =========================================================
-   Carga real desde Supabase. Si falla o no hay filas válidas,
-   se quedan los ejemplos de demostración.
+   Carga real desde Supabase
    ========================================================= */
 async function cargarDesdeSupabase(){
   try{
@@ -522,7 +636,7 @@ async function cargarDesdeSupabase(){
         'Content-Type': 'application/json',
         'apikey': SUPABASE_KEY,
         'Authorization': `Bearer ${SUPABASE_KEY}`
-         },
+      },
       body: '{}'
     });
     if(!res.ok){
@@ -545,7 +659,7 @@ async function cargarDesdeSupabase(){
       CREATIVOS = filas;
       renderGrid(activeTab);
     }
-  }catch(err){ console.error('fn_creativos_publicos: error de red', err); /* se queda con los ejemplos de demostración */ }
+  }catch(err){ console.error('fn_creativos_publicos: error de red', err); }
 }
 
 // Init
