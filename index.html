@@ -503,13 +503,28 @@ function dibujarCodigo(ctx, w, h, item, code){
   ctx.font = `700 ${tamEtiqueta}px Montserrat, Inter, sans-serif`;
   const anchoEtiqueta = ctx.measureText(etiqueta).width;
 
+  // Bloque de WhatsApp (debajo del código)
+  const wsEtiqueta = 'Escríbele a Valentina al WhatsApp';
+  const wsTelefono = '+58 4221482602';
+  const tamWsEtiqueta = ajustarFuente(ctx, wsEtiqueta, 700, base * 0.05, anchoMaxTexto);
+  ctx.font = `700 ${tamWsEtiqueta}px Montserrat, Inter, sans-serif`;
+  const anchoWsEtiqueta = ctx.measureText(wsEtiqueta).width;
+  const tamWsTelefono = ajustarFuente(ctx, wsTelefono, 900, base * 0.08, anchoMaxTexto);
+  ctx.font = `900 ${tamWsTelefono}px Montserrat, Inter, sans-serif`;
+  const anchoWsTelefono = ctx.measureText(wsTelefono).width;
+
   const pad = base * 0.04;
   const altoCodigo = tamCodigo * 0.72;      // altura de mayúsculas/dígitos
   const altoEtiqueta = tamEtiqueta * 0.72;
   const separacion = tamEtiqueta * 0.7;
+  const altoWsEtiqueta = tamWsEtiqueta * 0.72;
+  const altoWsTelefono = tamWsTelefono * 0.72;
+  const sepCodigoWs = pad * 1.1;            // espacio (con línea divisoria) entre código y WhatsApp
+  const sepWs = tamWsEtiqueta * 0.6;
 
-  const anchoPanel = Math.max(anchoCodigo, anchoEtiqueta) + pad * 2.2;
-  const altoPanel = pad + altoEtiqueta + separacion + altoCodigo + pad;
+  const anchoPanel = Math.max(anchoCodigo, anchoEtiqueta, anchoWsEtiqueta, anchoWsTelefono) + pad * 2.2;
+  const altoPanel = pad + altoEtiqueta + separacion + altoCodigo
+                  + sepCodigoWs + altoWsEtiqueta + sepWs + altoWsTelefono + pad;
 
   // y = base del código; se sube si el panel se saldría del lienzo
   let yCodigo = item.codigo_y * h;
@@ -557,6 +572,29 @@ function dibujarCodigo(ctx, w, h, item, code){
   ctx.strokeText(texto, cx, yCodigo);
   ctx.fillStyle = '#FFFFFF';
   ctx.fillText(texto, cx, yCodigo);
+
+  // Línea divisoria
+  const yLinea = yCodigo + sepCodigoWs * 0.5;
+  ctx.beginPath();
+  ctx.moveTo(cx - anchoPanel * 0.3, yLinea);
+  ctx.lineTo(cx + anchoPanel * 0.3, yLinea);
+  ctx.lineWidth = Math.max(2, base * 0.004);
+  ctx.strokeStyle = 'rgba(228,182,115,.7)';
+  ctx.stroke();
+
+  // WhatsApp de Valentina
+  const yWsEtiqueta = yCodigo + sepCodigoWs + altoWsEtiqueta;
+  ctx.font = `700 ${tamWsEtiqueta}px Montserrat, Inter, sans-serif`;
+  ctx.fillStyle = '#F5F0E4';
+  ctx.fillText(wsEtiqueta, cx, yWsEtiqueta);
+
+  const yWsTelefono = yWsEtiqueta + sepWs + altoWsTelefono;
+  ctx.font = `900 ${tamWsTelefono}px Montserrat, Inter, sans-serif`;
+  ctx.lineWidth = tamWsTelefono * 0.06;
+  ctx.strokeStyle = 'rgba(0,0,0,.45)';
+  ctx.strokeText(wsTelefono, cx, yWsTelefono);
+  ctx.fillStyle = '#E4B673';
+  ctx.fillText(wsTelefono, cx, yWsTelefono);
 }
 
 /* =========================================================
