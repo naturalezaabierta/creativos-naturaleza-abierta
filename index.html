@@ -6,7 +6,7 @@
 <title>Creativos para Afiliados — Naturaleza Abierta</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
   :root{
     --crema:#F5F0E4;
@@ -92,7 +92,7 @@
   .codebar.known .codebar-label,.codebar.known .code-val{color:#F5F0E4;}
   .codebar-label{font-size:13px;color:#7A7862;}
   .code-val{
-    font-family:'Fraunces',serif;font-weight:700;font-size:20px;
+    font-family:'Montserrat',sans-serif;font-weight:800;font-size:20px;
     letter-spacing:.04em;color:var(--musgo-oscuro);
   }
   .codebar input{
@@ -285,7 +285,7 @@
   footer.help li{margin-bottom:6px;}
   footer.help b{color:#F5F0E4;}
   footer.help .code-inline{
-    font-family:'Fraunces',serif;font-weight:700;letter-spacing:.04em;color:var(--ochre-suave);
+    font-family:'Montserrat',sans-serif;font-weight:800;letter-spacing:.04em;color:var(--ochre-suave);
   }
 </style>
 </head>
@@ -355,7 +355,9 @@
    - imagen_url: debe estar en el MISMO dominio que esta página
      (ej. creativos.naturalezaabierta.com/imagenes/archivo.jpg)
      y el archivo debe existir en la carpeta "imagenes" del repo.
-   - codigo_x / codigo_y: posición del código, decimal de 0 a 1
+   - codigo_x / codigo_y: posición del bloque del código
+     (decimal de 0 a 1). Y es la base del código grande;
+     el texto "Adquiere este producto con mi código" va justo arriba.
    ========================================================= */
 const SUPABASE_URL = "https://tgvcvnhrwswuxgjbpvwq.supabase.co";
 const SUPABASE_KEY = "sb_publishable_EKV8OM1y96u-DV_kUPGwkg_BZuGdf4D";
@@ -415,6 +417,17 @@ document.getElementById('codeBtn').addEventListener('click', ()=>{
 });
 
 /* =========================================================
+   Fuentes: Montserrat debe estar cargada antes de dibujar
+   en el canvas, si no se vería con otra letra.
+   ========================================================= */
+const fuentesListas = Promise.all([
+  document.fonts.load('900 100px "Montserrat"'),
+  document.fonts.load('700 100px "Montserrat"'),
+  document.fonts.load('700 100px "Fraunces"'),
+  document.fonts.load('600 100px "Inter"')
+]).catch(()=>{});
+
+/* =========================================================
    Dibujo en canvas
    ========================================================= */
 function dibujarPlaceholder(ctx, w, h, item){
@@ -442,10 +455,6 @@ function dibujarPlaceholder(ctx, w, h, item){
   ctx.font = `400 ${Math.round(w*0.032)}px Inter, sans-serif`;
   ctx.fillStyle = 'rgba(245,240,228,.8)';
   ctx.fillText(item.sub, w/2, h*0.56);
-
-  ctx.font = `500 ${Math.round(w*0.024)}px Inter, sans-serif`;
-  ctx.fillStyle = 'rgba(245,240,228,.55)';
-  ctx.fillText('Pídelo aquí con mi código 👇', w/2, item.codigo_y*h - w*0.05);
 }
 
 // Imagen real ajustada tipo "cover" (llena el lienzo sin deformarse)
@@ -456,17 +465,98 @@ function dibujarImagenCover(ctx, img, w, h){
   ctx.drawImage(img, dx, dy, dw, dh);
 }
 
+function rectRedondeado(ctx, x, y, w, h, r){
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+// Devuelve el tamaño de letra más grande (hasta tamInicial) que cabe en anchoMax
+function ajustarFuente(ctx, texto, peso, tamInicial, anchoMax){
+  ctx.font = `${peso} ${tamInicial}px Montserrat, Inter, sans-serif`;
+  const ancho = ctx.measureText(texto).width;
+  const tam = ancho > anchoMax ? tamInicial * anchoMax / ancho : tamInicial;
+  return Math.floor(tam);
+}
+
+/* Bloque del código:
+     Adquiere este producto con mi código
+     NA-XXXXX   (grande, Montserrat Black)
+   Va sobre un panel oscuro semitransparente para que se lea
+   bien sobre cualquier imagen. */
 function dibujarCodigo(ctx, w, h, item, code){
-  const texto = code || 'TU-CÓDIGO';
-  const x = item.codigo_x * w;
-  const y = item.codigo_y * h;
+  const texto = code || 'NA-XXXXX';
+  const etiqueta = 'Adquiere este producto con mi código';
+
+  const base = Math.min(w, h);
+  const anchoMaxTexto = w * 0.84;
+
+  const tamCodigo = ajustarFuente(ctx, texto, 900, base * 0.17, anchoMaxTexto);
+  ctx.font = `900 ${tamCodigo}px Montserrat, Inter, sans-serif`;
+  const anchoCodigo = ctx.measureText(texto).width;
+
+  const tamEtiqueta = ajustarFuente(ctx, etiqueta, 700, base * 0.055, anchoMaxTexto);
+  ctx.font = `700 ${tamEtiqueta}px Montserrat, Inter, sans-serif`;
+  const anchoEtiqueta = ctx.measureText(etiqueta).width;
+
+  const pad = base * 0.04;
+  const altoCodigo = tamCodigo * 0.72;      // altura de mayúsculas/dígitos
+  const altoEtiqueta = tamEtiqueta * 0.72;
+  const separacion = tamEtiqueta * 0.7;
+
+  const anchoPanel = Math.max(anchoCodigo, anchoEtiqueta) + pad * 2.2;
+  const altoPanel = pad + altoEtiqueta + separacion + altoCodigo + pad;
+
+  // y = base del código; se sube si el panel se saldría del lienzo
+  let yCodigo = item.codigo_y * h;
+  const margen = h * 0.03;
+  let panelTop = yCodigo - altoCodigo - separacion - altoEtiqueta - pad;
+  let panelBottom = panelTop + altoPanel;
+  if(panelBottom > h - margen){
+    const subir = panelBottom - (h - margen);
+    yCodigo -= subir; panelTop -= subir; panelBottom -= subir;
+  }
+  if(panelTop < margen){
+    const bajar = margen - panelTop;
+    yCodigo += bajar; panelTop += bajar; panelBottom += bajar;
+  }
+
+  let cx = item.codigo_x * w;
+  const mX = w * 0.02;
+  cx = Math.min(Math.max(cx, anchoPanel / 2 + mX), w - anchoPanel / 2 - mX);
+  const panelLeft = cx - anchoPanel / 2;
+
+  // Panel de fondo
+  ctx.save();
+  rectRedondeado(ctx, panelLeft, panelTop, anchoPanel, altoPanel, base * 0.035);
+  ctx.fillStyle = 'rgba(28,34,24,.78)';
+  ctx.fill();
+  ctx.lineWidth = Math.max(2, base * 0.004);
+  ctx.strokeStyle = 'rgba(245,240,228,.35)';
+  ctx.stroke();
+  ctx.restore();
+
   ctx.textAlign = 'center';
-  ctx.font = `700 ${Math.round(w*0.075)}px Fraunces, serif`;
-  ctx.lineWidth = w*0.012;
-  ctx.strokeStyle = 'rgba(42,40,31,.55)';
-  ctx.strokeText(texto, x, y);
+  ctx.textBaseline = 'alphabetic';
+
+  // Texto de arriba
+  const yEtiqueta = panelTop + pad + altoEtiqueta;
+  ctx.font = `700 ${tamEtiqueta}px Montserrat, Inter, sans-serif`;
   ctx.fillStyle = '#F5F0E4';
-  ctx.fillText(texto, x, y);
+  ctx.fillText(etiqueta, cx, yEtiqueta);
+
+  // Código grande
+  ctx.font = `900 ${tamCodigo}px Montserrat, Inter, sans-serif`;
+  ctx.lineJoin = 'round';
+  ctx.lineWidth = tamCodigo * 0.06;
+  ctx.strokeStyle = 'rgba(0,0,0,.45)';
+  ctx.strokeText(texto, cx, yCodigo);
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillText(texto, cx, yCodigo);
 }
 
 /* =========================================================
@@ -574,26 +664,29 @@ function renderGrid(tab){
 
     const canvas = card.querySelector('canvas');
     const ctx = canvas.getContext('2d');
+    const codigoActual = currentCode;
 
-    if(item.imagen_url){
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.onload = () => {
-        dibujarImagenCover(ctx, img, dim.w, dim.h);
-        dibujarCodigo(ctx, dim.w, dim.h, item, currentCode);
-      };
-      img.onerror = () => {
-        // Imagen que no existe o no carga: se oculta para no mostrar tarjetas rotas
-        console.warn('No se pudo cargar la imagen:', item.imagen_url);
-        card.hidden = true;
-        card.style.display = 'none';
-        revisarVacio();
-      };
-      img.src = item.imagen_url;
-    } else {
-      dibujarPlaceholder(ctx, dim.w, dim.h, item);
-      dibujarCodigo(ctx, dim.w, dim.h, item, currentCode);
-    }
+    fuentesListas.then(() => {
+      if(item.imagen_url){
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+          dibujarImagenCover(ctx, img, dim.w, dim.h);
+          dibujarCodigo(ctx, dim.w, dim.h, item, codigoActual);
+        };
+        img.onerror = () => {
+          // Imagen que no existe o no carga: se oculta para no mostrar tarjetas rotas
+          console.warn('No se pudo cargar la imagen:', item.imagen_url);
+          card.hidden = true;
+          card.style.display = 'none';
+          revisarVacio();
+        };
+        img.src = item.imagen_url;
+      } else {
+        dibujarPlaceholder(ctx, dim.w, dim.h, item);
+        dibujarCodigo(ctx, dim.w, dim.h, item, codigoActual);
+      }
+    });
   });
 
   gridEl.querySelectorAll('.dl-btn').forEach(btn=>{
